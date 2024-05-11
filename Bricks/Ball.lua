@@ -113,6 +113,7 @@ end
 
 -- Render ball on screen
 function Ball:render()
+    love.graphics.setColor(0.3, 0.3, 1, 1)
     love.graphics.rectangle(
         'fill',
         self.x,
@@ -120,4 +121,5 @@ function Ball:render()
         self.width,
         self.height
     )
+    love.graphics.setColor(1, 1, 1, 1)
 end

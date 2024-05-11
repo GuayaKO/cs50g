@@ -121,7 +121,12 @@ function love.update(dt)
             end
         end
 
-
+        for i = 1, 10 do
+            brick = field[i]
+            if brick.lifes == 0 then
+                field[i] = Brick(field)
+            end
+        end
 
         -- Ball boundary collision
         -- Hit upper border
@@ -259,11 +264,13 @@ function love.draw()
 
     -- Draw life counter
     love.graphics.setFont(large_font)
+    love.graphics.setColor(0, 1, 0, 1)
     love.graphics.print(
         tostring(player.lives),
         VIRTUAL_WIDTH * 9 / 10,
         VIRTUAL_HEIGHT / 10
     )
+    love.graphics.setColor(1, 1, 1, 1)
 
     -- Render player object
     player:render()
