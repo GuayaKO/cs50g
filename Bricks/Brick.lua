@@ -38,7 +38,7 @@ end
 
 -- Erode brick when hit
 function Brick:erode()
-    self.life = self.life - 1
+    self.lifes = self.lifes - 1
 end
 
 -- Render brick on screen

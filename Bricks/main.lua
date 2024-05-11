@@ -110,7 +110,18 @@ function love.update(dt)
         if direction then
             ball:bounce(player, direction)
             sound_effect.paddle_hit:play()
+        else
+            for i = 1, 10 do
+                brick = field[i]
+                direction = ball:collides(brick)
+                if direction then
+                    ball:bounce(brick, direction)
+                    brick:erode()
+                end
+            end
         end
+
+
 
         -- Ball boundary collision
         -- Hit upper border
