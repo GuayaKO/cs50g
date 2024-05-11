@@ -4,7 +4,7 @@ Brick = class{}
 function Brick:init(others)
     repeat
         self.x = math.random(0, VIRTUAL_WIDTH - 30)
-        self.y = math.random(0, VIRTUAL_HEIGHT - 30)
+        self.y = math.random(0, VIRTUAL_HEIGHT - 80)
         self.width = math.random(10, 30)
         self.height = math.random(10, 30)
         self.left = self.x

@@ -8,6 +8,10 @@ function Ball:init(x, y, width, height)
     self.height = height
     self.dx = math.random(-50, 50)
     self.dy = 100
+    self.left = self.x
+    self.right = self.x + self.width
+    self.top = self.y
+    self.bottom = self.y + self.height
 end
 
 -- Collision detection
@@ -101,6 +105,10 @@ end
 function Ball:update(dt)
     self.x = self.dx * dt + self.x
     self.y = self.dy * dt + self.y
+    self.left = self.x
+    self.right = self.x + self.width
+    self.top = self.y
+    self.bottom = self.y + self.height
 end
 
 -- Render ball on screen
