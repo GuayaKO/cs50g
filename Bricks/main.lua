@@ -11,6 +11,7 @@ push = require 'push'
 class = require 'class'
 require 'Player'
 require 'Ball'
+require 'Brick'
 
 -- Capture display dimensions
 WINDOW_WIDTH, WINDOW_HEIGHT = love.window.getDesktopDimensions(1)
@@ -75,9 +76,9 @@ function love.load()
     -- Initialize player object
     player = Player(
         10,
-        VIRTUAL_HEIGHT - 30,
-        20,
-        30
+        VIRTUAL_HEIGHT - 20,
+        25,
+        20
     )
 
     -- Initialize ball object
@@ -87,6 +88,13 @@ function love.load()
         4,
         4
     )
+
+    -- Initialize brick objects
+    field = {}
+    field[0] = ball
+    for i = 1, 10 do
+        field[i] = Brick(field)
+    end
 
     -- Set initial game state
     game_state = 'start'
@@ -251,6 +259,10 @@ function love.draw()
 
     -- Render ball object
     ball:render()
+
+    for i = 1, 10 do
+        field[i]:render()
+    end
 
     -- Display FPS counter
     displayFPS()

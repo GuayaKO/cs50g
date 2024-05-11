@@ -36,6 +36,18 @@ function intersects(this, others)
     return false
 end
 
+-- Erode brick when hit
 function Brick:erode()
     self.life = self.life - 1
+end
+
+-- Render brick on screen
+function Brick:render()
+    love.graphics.rectangle(
+        'fill',
+        self.x,
+        self.y,
+        self.width,
+        self.height
+    )
 end
