@@ -9,6 +9,8 @@ push = require 'push'
 
 -- Screen resolution
 SCREEN_WIDTH, SCREEN_HEIGHT = love.window.getDesktopDimensions(1)
+-- SCREEN_WIDTH = 1280
+-- SCREEN_HEIGHT = 720
 
 -- Virtual resolution
 VIRTUAL_WIDTH = SCREEN_WIDTH / 4
@@ -17,6 +19,17 @@ VIRTUAL_HEIGHT = SCREEN_HEIGHT / 4
 -- Load images into memory
 local BACKGROUND = love.graphics.newImage('images/background.png')
 local FOREGROUND = love.graphics.newImage('images/foreground.png')
+
+-- Scroll speed
+local BACKGROUND_SCROLL_SPEED = 30
+local FOREGROUND_SCROLL_SPEED = 60
+
+-- Looping point
+local BACKGROUND_LOOPING_POINT = 413
+
+-- Keep track of scrolling
+local background_scroll = 0
+local foreground_scroll = 0
 
 
 -- Initialize the game
@@ -37,7 +50,7 @@ function love.load()
         SCREEN_HEIGHT,
         {
             vsync = true,
-            fullscreen = true,
+            fullscreen = false,
             resizable = true
         }
     )
@@ -66,17 +79,37 @@ function love.keypressed(key)
 end
 
 
+-- Update game state
+function love.update(dt)
+
+    -- Scroll background
+    background_scroll = (BACKGROUND_SCROLL_SPEED * dt + background_scroll)
+        % BACKGROUND_LOOPING_POINT
+
+    -- Scroll foreground
+    foreground_scroll = (FOREGROUND_SCROLL_SPEED * dt + foreground_scroll)
+        % VIRTUAL_WIDTH
+end
+
 -- Draw to the screen
 function love.draw()
     push:start()
 
     -- Draw background starting at
     -- the top left
-    love.graphics.draw(BACKGROUND, 0, 0)
+    love.graphics.draw(
+        BACKGROUND,
+        -background_scroll,
+        0
+    )
 
     -- Draw foreground towards the
     -- bottom of the screen
-    love.graphics.draw(FOREGROUND, 0, VIRTUAL_HEIGHT - 16)
+    love.graphics.draw(
+        FOREGROUND,
+        -foreground_scroll,
+        VIRTUAL_HEIGHT - 16
+    )
 
     push:finish()
 end

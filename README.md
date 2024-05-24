@@ -5,3 +5,10 @@ Variations on the exercises for the _HarvardX_ course available in the _EdX_ pla
 | Original | Variation |
 |----------|-----------|
 | Pong     | Bricks    |
+| Flappy   | Flippy    |
+
+### Instructions
+
+```
+love ./Flippy
+```
