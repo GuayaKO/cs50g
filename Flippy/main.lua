@@ -5,12 +5,18 @@
 
 
 -- Virtual resolution handling library
-push = require 'push'
+push = require 'modules.push'
+
+-- Classic OOP class library
+class = require 'modules.class'
+
+-- Local Bird class
+require 'classes.Bird'
 
 -- Screen resolution
-SCREEN_WIDTH, SCREEN_HEIGHT = love.window.getDesktopDimensions(1)
--- SCREEN_WIDTH = 1280
--- SCREEN_HEIGHT = 720
+-- SCREEN_WIDTH, SCREEN_HEIGHT = love.window.getDesktopDimensions(1)
+SCREEN_WIDTH = 1280
+SCREEN_HEIGHT = 720
 
 -- Virtual resolution
 VIRTUAL_WIDTH = SCREEN_WIDTH / 4
@@ -30,6 +36,9 @@ local BACKGROUND_LOOPING_POINT = 413
 -- Keep track of scrolling
 local background_scroll = 0
 local foreground_scroll = 0
+
+-- Instantiate bird object
+local bird = Bird()
 
 
 -- Initialize the game
@@ -110,6 +119,9 @@ function love.draw()
         -foreground_scroll,
         VIRTUAL_HEIGHT - 16
     )
+
+    -- Draw bird on top
+    bird:render()
 
     push:finish()
 end
