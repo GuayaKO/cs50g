@@ -10,13 +10,14 @@ push = require 'modules.push'
 -- Classic OOP class library
 class = require 'modules.class'
 
--- Local Bird class
+-- Import local classes
 require 'classes.Bird'
+require 'classes.Pipe'
 
 -- Screen resolution
--- SCREEN_WIDTH, SCREEN_HEIGHT = love.window.getDesktopDimensions(1)
-SCREEN_WIDTH = 1280
-SCREEN_HEIGHT = 720
+SCREEN_WIDTH, SCREEN_HEIGHT = love.window.getDesktopDimensions(1)
+-- SCREEN_WIDTH = 1280
+-- SCREEN_HEIGHT = 720
 
 -- Virtual resolution
 VIRTUAL_WIDTH = SCREEN_WIDTH / 4
@@ -40,6 +41,12 @@ local foreground_scroll = 0
 -- Instantiate bird object
 local bird = Bird()
 
+-- Table for spawning pipes
+local pipes = {}
+
+-- Timer for spawning pipes
+local spawn_timer = 0
+
 
 -- Initialize the game
 function love.load()
@@ -59,7 +66,7 @@ function love.load()
         SCREEN_HEIGHT,
         {
             vsync = true,
-            fullscreen = false,
+            fullscreen = true,
             resizable = true
         }
     )
@@ -111,7 +118,27 @@ function love.update(dt)
     foreground_scroll = (FOREGROUND_SCROLL_SPEED * dt + foreground_scroll)
         % VIRTUAL_WIDTH
 
+    -- Track time till next spawn
+    spawn_timer = spawn_timer + dt
+
+    -- Spawn a pipe if times is past 2 seconds
+    if spawn_timer > 2 then
+        table.insert(pipes, Pipe())
+        print('Pipe created.')
+        spawn_timer = 0
+    end
+
     bird:update(dt)
+
+    -- Iterate over pipes
+    for p, pipe in pairs(pipes) do
+        pipe:update(dt)
+
+        -- Remove pipes that go off screen
+        if pipe.x < -pipe.width then
+            table.remove(pipes, p)
+        end
+    end
 
     -- Reset input table
     love.keyboard.keysPressed = {}
@@ -128,6 +155,11 @@ function love.draw()
         -background_scroll,
         0
     )
+
+    -- Draw all pipes
+    for p, pipe in pairs(pipes) do
+        pipe:render()
+    end
 
     -- Draw foreground towards the
     -- bottom of the screen
