@@ -98,6 +98,8 @@ function love.update(dt)
     -- Scroll foreground
     foreground_scroll = (FOREGROUND_SCROLL_SPEED * dt + foreground_scroll)
         % VIRTUAL_WIDTH
+
+    bird:update(dt)
 end
 
 -- Draw to the screen
