@@ -63,6 +63,9 @@ function love.load()
             resizable = true
         }
     )
+
+    -- Initialize input table
+    love.keyboard.keysPressed = {}
 end
 
 
@@ -75,6 +78,9 @@ end
 -- Handle keyboard input
 function love.keypressed(key)
 
+    -- Add key to table
+    love.keyboard.keysPressed[key] = true
+
     -- Fast way to close the app
     if key == 'escape' then
         love.event.quit()
@@ -85,6 +91,12 @@ function love.keypressed(key)
         local is_fullscreen = love.window.getFullscreen()
         love.window.setFullscreen(not is_fullscreen, 'desktop')
     end
+end
+
+
+-- Global input check
+function love.keyboard.wasPressed(key)
+    return love.keyboard.keysPressed[key]
 end
 
 
@@ -100,6 +112,9 @@ function love.update(dt)
         % VIRTUAL_WIDTH
 
     bird:update(dt)
+
+    -- Reset input table
+    love.keyboard.keysPressed = {}
 end
 
 -- Draw to the screen

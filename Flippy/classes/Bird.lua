@@ -24,6 +24,11 @@ function Bird:update(dt)
     -- Apply gravity to velocity
     self.dy = GRAVITY * dt + self.dy
 
+    -- Add lift to bird
+    if love.keyboard.wasPressed('space') then
+        self.dy = -5
+    end
+
     -- Apply velocity to Y position
     self.y = self.y + self.dy
 end
