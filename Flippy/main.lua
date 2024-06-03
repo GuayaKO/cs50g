@@ -13,6 +13,7 @@ class = require 'modules.class'
 -- Import local classes
 require 'classes.Bird'
 require 'classes.Pipe'
+require 'classes.Pair'
 
 -- Screen resolution
 SCREEN_WIDTH, SCREEN_HEIGHT = love.window.getDesktopDimensions(1)
@@ -33,6 +34,7 @@ local FOREGROUND_SCROLL_SPEED = 60
 
 -- Looping point
 local BACKGROUND_LOOPING_POINT = 413
+local FOREGROUND_LOOPING_POINT = 512
 
 -- Keep track of scrolling
 local background_scroll = 0
@@ -46,6 +48,13 @@ local pipes = {}
 
 -- Timer for spawning pipes
 local spawn_timer = 0
+
+-- Initial Y value
+math.randomseed(os.time())
+local last_y = math.random(
+    VIRTUAL_HEIGHT / 6 * 4.5,
+    VIRTUAL_HEIGHT / 6 * 1.5
+)
 
 
 -- Initialize the game
@@ -116,26 +125,32 @@ function love.update(dt)
 
     -- Scroll foreground
     foreground_scroll = (FOREGROUND_SCROLL_SPEED * dt + foreground_scroll)
-        % VIRTUAL_WIDTH
+        % FOREGROUND_LOOPING_POINT
 
     -- Track time till next spawn
     spawn_timer = spawn_timer + dt
 
     -- Spawn a pipe if times is past 2 seconds
-    if spawn_timer > 2 then
-        table.insert(pipes, Pipe())
-        print('Pipe created.')
+    if spawn_timer > 2.5 then
+        table.insert(pipes, Pair(last_y))
+        print('Pipes created.')
+        last_y = math.random(
+            VIRTUAL_HEIGHT / 6 * 1.25,
+            VIRTUAL_HEIGHT / 6 * 4.75
+        )
         spawn_timer = 0
     end
 
     bird:update(dt)
 
     -- Iterate over pipes
-    for p, pipe in pairs(pipes) do
-        pipe:update(dt)
+    for _, pair in pairs(pipes) do
+        pair:update(dt)
+    end
 
+    for p, pair in pairs(pipes) do
         -- Remove pipes that go off screen
-        if pipe.x < -pipe.width then
+        if pair.remove then
             table.remove(pipes, p)
         end
     end
@@ -157,8 +172,8 @@ function love.draw()
     )
 
     -- Draw all pipes
-    for p, pipe in pairs(pipes) do
-        pipe:render()
+    for _, pair in pairs(pipes) do
+        pair:render()
     end
 
     -- Draw foreground towards the
