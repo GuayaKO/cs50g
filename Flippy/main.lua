@@ -62,7 +62,6 @@ local last_y = math.random(
 
 -- Initialize the game
 function love.load()
-
     -- Prevent blurring of text and graphics
     -- with nearest-neighbor filter
     love.graphics.setDefaultFilter('nearest', 'nearest')
@@ -87,16 +86,13 @@ function love.load()
     love.keyboard.keysPressed = {}
 end
 
-
 -- Handle window resizing
 function love.resize(width, height)
     push:resize(width, height)
 end
 
-
 -- Handle keyboard input
 function love.keypressed(key)
-
     -- Add key to table
     love.keyboard.keysPressed[key] = true
 
@@ -112,16 +108,13 @@ function love.keypressed(key)
     end
 end
 
-
 -- Global input check
 function love.keyboard.wasPressed(key)
     return love.keyboard.keysPressed[key]
 end
 
-
 -- Update game state
 function love.update(dt)
-
     -- Scroll background
     background_scroll = (BACKGROUND_SCROLL_SPEED * dt + background_scroll)
         % BACKGROUND_LOOPING_POINT
