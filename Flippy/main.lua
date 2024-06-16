@@ -21,8 +21,8 @@ SCREEN_WIDTH, SCREEN_HEIGHT = love.window.getDesktopDimensions(1)
 -- SCREEN_HEIGHT = 720
 
 -- Virtual resolution
-VIRTUAL_WIDTH = SCREEN_WIDTH / 4
-VIRTUAL_HEIGHT = SCREEN_HEIGHT / 4
+VIRTUAL_WIDTH = SCREEN_WIDTH / 3
+VIRTUAL_HEIGHT = SCREEN_HEIGHT / 3
 
 -- Load images into memory
 local BACKGROUND = love.graphics.newImage('images/background.png')
@@ -40,6 +40,9 @@ local FOREGROUND_LOOPING_POINT = 512
 local background_scroll = 0
 local foreground_scroll = 0
 
+-- Background scaling factor
+local scaling_factor = VIRTUAL_HEIGHT / BACKGROUND:getHeight()
+
 -- Instantiate bird object
 local bird = Bird()
 
@@ -52,8 +55,8 @@ local spawn_timer = 0
 -- Initial Y value
 math.randomseed(os.time())
 local last_y = math.random(
-    VIRTUAL_HEIGHT / 6 * 4.5,
-    VIRTUAL_HEIGHT / 6 * 1.5
+    VIRTUAL_HEIGHT / 6 * 4,
+    VIRTUAL_HEIGHT / 6 * 2
 )
 
 
@@ -135,8 +138,8 @@ function love.update(dt)
         table.insert(pipes, Pair(last_y))
         print('Pipes created.')
         last_y = math.random(
-            VIRTUAL_HEIGHT / 6 * 1.25,
-            VIRTUAL_HEIGHT / 6 * 4.75
+            VIRTUAL_HEIGHT / 6 * 2,
+            VIRTUAL_HEIGHT / 6 * 4
         )
         spawn_timer = 0
     end
@@ -168,7 +171,10 @@ function love.draw()
     love.graphics.draw(
         BACKGROUND,
         -background_scroll,
-        0
+        0,
+        0,
+        1,
+        scaling_factor
     )
 
     -- Draw all pipes

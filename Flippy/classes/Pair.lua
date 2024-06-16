@@ -9,25 +9,20 @@ function Pair:init(y)
     self.x = VIRTUAL_WIDTH + 32
 
     print(y)
-    if y < VIRTUAL_HEIGHT / 6 * 2 then
+    if y < VIRTUAL_HEIGHT / 2 then
         print("Y < ", VIRTUAL_HEIGHT / 6 * 2)
-        self.y1 = -1000
-        self.y2 = y
-    elseif y > VIRTUAL_HEIGHT / 6 * 4 then
-        print("Y > ", VIRTUAL_HEIGHT / 6 * 4)
-        self.y1 = y - PIPE_HEIGHT
-        self.y2 = VIRTUAL_HEIGHT + 1000
-    else
-        print(
-            VIRTUAL_HEIGHT / 6 * 2,
-            " > Y >",
-            VIRTUAL_HEIGHT / 6 * 4
-        )
         self.y1 = y - PIPE_HEIGHT
         self.y2 = math.random(
             y + 90,
-            VIRTUAL_HEIGHT / 6 * 5.5
+            VIRTUAL_HEIGHT / 6 * 5
         )
+    else
+        print("Y > ", VIRTUAL_HEIGHT / 6 * 4)
+        self.y1 = math.random(
+            VIRTUAL_HEIGHT / 6,
+            y - 90
+        ) - PIPE_HEIGHT
+        self.y2 = y
     end
 
     -- print(y)
