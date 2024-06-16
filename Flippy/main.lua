@@ -28,13 +28,13 @@ VIRTUAL_HEIGHT = SCREEN_HEIGHT / 3
 local BACKGROUND = love.graphics.newImage('images/background.png')
 local FOREGROUND = love.graphics.newImage('images/foreground.png')
 
--- Scroll speed
-local BACKGROUND_SCROLL_SPEED = 30
+-- Set scroll speed
+local BACKGROUND_SCROLL_SPEED = 20
 local FOREGROUND_SCROLL_SPEED = 60
 
 -- Looping point
 local BACKGROUND_LOOPING_POINT = 413
-local FOREGROUND_LOOPING_POINT = 512
+local FOREGROUND_LOOPING_POINT = 104
 
 -- Keep track of scrolling
 local background_scroll = 0
@@ -58,6 +58,9 @@ local last_y = math.random(
     VIRTUAL_HEIGHT / 6 * 4,
     VIRTUAL_HEIGHT / 6 * 2
 )
+
+-- To pause the game when a collision is detected
+local paused = false
 
 
 -- Initialize the game
@@ -115,39 +118,49 @@ end
 
 -- Update game state
 function love.update(dt)
-    -- Scroll background
-    background_scroll = (BACKGROUND_SCROLL_SPEED * dt + background_scroll)
-        % BACKGROUND_LOOPING_POINT
+    if not paused then
+        -- Scroll background
+        background_scroll = (BACKGROUND_SCROLL_SPEED * dt + background_scroll)
+            % BACKGROUND_LOOPING_POINT
 
-    -- Scroll foreground
-    foreground_scroll = (FOREGROUND_SCROLL_SPEED * dt + foreground_scroll)
-        % FOREGROUND_LOOPING_POINT
+        -- Scroll foreground
+        foreground_scroll = (FOREGROUND_SCROLL_SPEED * dt + foreground_scroll)
+            % FOREGROUND_LOOPING_POINT
 
-    -- Track time till next spawn
-    spawn_timer = spawn_timer + dt
+        -- Track time till next spawn
+        spawn_timer = spawn_timer + dt
 
-    -- Spawn a pipe if times is past 2 seconds
-    if spawn_timer > 2.5 then
-        table.insert(pipes, Pair(last_y))
-        print('Pipes created.')
-        last_y = math.random(
-            VIRTUAL_HEIGHT / 6 * 2,
-            VIRTUAL_HEIGHT / 6 * 4
-        )
-        spawn_timer = 0
-    end
+        -- Spawn a pipe if times is past 2 seconds
+        if spawn_timer > 2.5 then
+            table.insert(pipes, Pair(last_y))
+            print('Pipes created.')
+            last_y = math.random(
+                VIRTUAL_HEIGHT / 6 * 2,
+                VIRTUAL_HEIGHT / 6 * 4
+            )
+            spawn_timer = 0
+        end
 
-    bird:update(dt)
+        paused = bird:update(dt)
 
-    -- Iterate over pipes
-    for _, pair in pairs(pipes) do
-        pair:update(dt)
-    end
+        -- Iterate over pipes
+        for _, pair in pairs(pipes) do
+            pair:update(dt)
 
-    for p, pair in pairs(pipes) do
-        -- Remove pipes that go off screen
-        if pair.remove then
-            table.remove(pipes, p)
+            -- Check if bird collided with pipe
+            for _, pipe in pairs(pair.pipes) do
+                if bird:collides(pipe) then
+                    -- Pause the game
+                    paused = true
+                end
+            end
+        end
+
+        for p, pair in pairs(pipes) do
+            -- Remove pipes that go off screen
+            if pair.remove then
+                table.remove(pipes, p)
+            end
         end
     end
 

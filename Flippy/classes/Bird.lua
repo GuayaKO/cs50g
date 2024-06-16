@@ -1,11 +1,10 @@
 -- Bird Class
-Bird = class{}
+Bird = class {}
 
 local GRAVITY = 20
 
 
 function Bird:init()
-
     -- Load image and record width and height
     self.image = love.graphics.newImage('images/bird.png')
     self.width = self.image:getWidth()
@@ -19,6 +18,18 @@ function Bird:init()
     self.dy = 0
 end
 
+function Bird:collides(pipe)
+    if (self.x + 2) + (self.width - 4) >= pipe.x then
+        if self.x + 2 <= pipe.x + PIPE_WIDTH then
+            if (self.y + 2) + (self.height - 4) >= pipe.y then
+                if self.y + 2 <= pipe.y + PIPE_HEIGHT then
+                    return true
+                end
+            end
+        end
+    end
+    return false
+end
 
 function Bird:update(dt)
     -- Apply gravity to velocity
@@ -31,8 +42,12 @@ function Bird:update(dt)
 
     -- Apply velocity to Y position
     self.y = self.y + self.dy
-end
 
+    if self.y < 0 or self.y + self.height > VIRTUAL_HEIGHT then
+        return true
+    end
+    return false
+end
 
 function Bird:render()
     love.graphics.draw(
