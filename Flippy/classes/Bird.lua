@@ -36,7 +36,7 @@ function Bird:update(dt)
     self.dy = GRAVITY * dt + self.dy
 
     -- Add lift to bird
-    if love.keyboard.wasPressed('space') then
+    if love.keyboard.pressed('space') then
         self.dy = -3
     end
 

@@ -20,6 +20,7 @@ require 'classes.Machine'
 require 'context.State'
 require 'context.Play'
 require 'context.Title'
+require 'context.Score'
 
 -- Screen resolution
 SCREEN_WIDTH, SCREEN_HEIGHT = love.window.getDesktopDimensions(1)
@@ -52,14 +53,13 @@ local scale_factor = VIRTUAL_HEIGHT / BACKGROUND:getHeight()
 
 -- Initialize the game
 function love.load()
-    -- Prevent blurring of text and graphics
-    -- with nearest-neighbor filter
+    -- Initialize nearest-neighbor filter
     love.graphics.setDefaultFilter('nearest', 'nearest')
 
-    -- Set app window title
+    -- Set window title
     love.window.setTitle('Flippy Bird')
 
-    -- Initialize retro text fonts
+    -- Initialize retro fonts
     small_font = love.graphics.newFont('fonts/font.ttf', 8)
     medium_font = love.graphics.newFont('fonts/flappy.ttf', 14)
     large_font = love.graphics.newFont('fonts/flappy.ttf', 28)
@@ -79,14 +79,16 @@ function love.load()
         }
     )
 
+    -- Initialize state machine
     game_state = Machine {
         ['title'] = function() return Title() end,
         ['play'] = function() return Play() end,
+        ['score'] = function() return Score() end
     }
     game_state:change('title')
 
     -- Initialize input table
-    love.keyboard.keysPressed = {}
+    love.keyboard.keys = {}
 end
 
 -- Handle window resizing
@@ -97,7 +99,7 @@ end
 -- Handle keyboard input
 function love.keypressed(key)
     -- Add key to table
-    love.keyboard.keysPressed[key] = true
+    love.keyboard.keys[key] = true
 
     -- Fast way to close the app
     if key == 'escape' then
@@ -112,8 +114,8 @@ function love.keypressed(key)
 end
 
 -- Global input check
-function love.keyboard.wasPressed(key)
-    return love.keyboard.keysPressed[key]
+function love.keyboard.pressed(key)
+    return love.keyboard.keys[key]
 end
 
 -- Update game state
@@ -129,7 +131,7 @@ function love.update(dt)
     game_state:update(dt)
 
     -- Reset input table
-    love.keyboard.keysPressed = {}
+    love.keyboard.keys = {}
 end
 
 -- Draw to the screen

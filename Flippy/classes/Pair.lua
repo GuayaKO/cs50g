@@ -1,5 +1,5 @@
 -- Pair Class
-Pair = class{}
+Pair = class {}
 
 local second_y = 1000
 
@@ -25,15 +25,6 @@ function Pair:init(y)
         self.y2 = y
     end
 
-    -- print(y)
-    -- self.y = y
-
-    -- if self.y + PIPE_HEIGHT + 90 > VIRTUAL_HEIGHT - 50 then
-    --     lower_y = VIRTUAL_HEIGHT + 10
-    -- else
-    --     lower_y = math.random(self.y + PIPE_HEIGHT + 90, VIRTUAL_HEIGHT - 50)
-    -- end
-
     -- Instantiate pipes
     self.pipes = {
         ['upper'] = Pipe('top', self.y1),
@@ -41,11 +32,12 @@ function Pair:init(y)
         ['lower'] = Pipe('bottom', self.y2)
     }
 
-    -- True when out of the screen and
-    -- ready to be removed from scene
+    -- True when ready to be removed
     self.remove = false
-end
 
+    -- Whether these pipes have been scored
+    self.scored = false
+end
 
 function Pair:update(dt)
     if self.x > -PIPE_WIDTH then
@@ -57,10 +49,8 @@ function Pair:update(dt)
     end
 end
 
-
 function Pair:render()
     for _, pipe in pairs(self.pipes) do
         pipe:render()
     end
 end
-

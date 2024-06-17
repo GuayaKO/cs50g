@@ -1,11 +1,5 @@
 Play = class { __includes = State }
 
--- PIPE_SPEED = 60
--- PIPE_WIDTH = 70
--- PIPE_HEIGHT = 288
-
--- BIRD_WIDTH = 38
--- BIRD_HEIGHT = 24
 
 function Play:init()
     -- Instantiate bird object
@@ -14,6 +8,9 @@ function Play:init()
     -- Table and timer for spawning pipes
     self.pipes = {}
     self.timer = 0
+
+    -- Score counter
+    self.score = 0
 
     -- initialize our last recorded Y value for a gap placement to base other gaps off of
     math.randomseed(os.time())
@@ -44,6 +41,14 @@ function Play:update(dt)
 
     -- Update position of pipes
     for _, pair in pairs(self.pipes) do
+
+        -- Keep score count
+        if not pair.scored then
+            if pair.x + PIPE_WIDTH < self.bird.x then
+                self.score = self.score + 1
+                pair.scored = true
+            end
+        end
         pair:update(dt)
     end
 
@@ -61,14 +66,24 @@ function Play:update(dt)
     for _, pair in pairs(self.pipes) do
         for _, pipe in pairs(pair.pipes) do
             if self.bird:collides(pipe) then
-                game_state:change('title')
+                game_state:change(
+                    'score',
+                    {
+                        score = self.score
+                    }
+                )
             end
         end
     end
 
     -- Reset if we hit screen margins
     if self.bird.y < 0 or self.bird.y > VIRTUAL_HEIGHT - self.bird.height then
-        game_state:change('title')
+        game_state:change(
+            'score',
+            {
+                score = self.score
+            }
+        )
     end
 end
 

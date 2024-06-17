@@ -1,7 +1,7 @@
 Title = class{__includes = State}
 
 function Title:update(dt)
-    if love.keyboard.wasPressed('enter') or love.keyboard.wasPressed('return') then
+    if love.keyboard.pressed('enter') or love.keyboard.pressed('return') then
         game_state:change('play')
     end
 end
