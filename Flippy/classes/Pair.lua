@@ -38,7 +38,7 @@ end
 
 function Pair:update(dt)
     if self.x > -PIPE_WIDTH then
-        self.x = -PIPE_SPEED * dt + self.x
+        self.x = -FOREGROUND_SCROLL_SPEED * dt + self.x
         self.pipes['lower'].x = self.x
         self.pipes['upper'].x = self.x
     else

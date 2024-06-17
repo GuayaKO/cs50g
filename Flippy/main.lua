@@ -37,8 +37,8 @@ local BACKGROUND = love.graphics.newImage('images/background.png')
 local FOREGROUND = love.graphics.newImage('images/foreground.png')
 
 -- Set scroll speed
-local BACKGROUND_SCROLL_SPEED = 20
-local FOREGROUND_SCROLL_SPEED = 60
+local BACKGROUND_SCROLL_SPEED = 25
+FOREGROUND_SCROLL_SPEED = 60
 
 -- Looping point
 local BACKGROUND_LOOPING_POINT = 413

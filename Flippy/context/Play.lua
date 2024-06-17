@@ -89,6 +89,8 @@ function Play:update(dt)
             }
         )
     end
+
+    FOREGROUND_SCROLL_SPEED = self.score * 0.01 + FOREGROUND_SCROLL_SPEED
 end
 
 function Play:render()

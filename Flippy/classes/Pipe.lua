@@ -4,8 +4,6 @@ Pipe = class{}
 -- Declare constants
 local PIPE_IMAGE = love.graphics.newImage('images/pipe.png')
 
-PIPE_SPEED = 60
-
 PIPE_HEIGHT = PIPE_IMAGE:getHeight()
 PIPE_WIDTH = PIPE_IMAGE:getWidth()
 
