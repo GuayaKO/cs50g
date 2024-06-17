@@ -42,11 +42,6 @@ function Bird:update(dt)
 
     -- Apply velocity to Y position
     self.y = self.y + self.dy
-
-    if self.y < 0 or self.y + self.height > VIRTUAL_HEIGHT then
-        return true
-    end
-    return false
 end
 
 function Bird:render()

@@ -15,6 +15,12 @@ require 'classes.Bird'
 require 'classes.Pipe'
 require 'classes.Pair'
 
+-- Import state machine context
+require 'classes.Machine'
+require 'context.State'
+require 'context.Play'
+require 'context.Title'
+
 -- Screen resolution
 SCREEN_WIDTH, SCREEN_HEIGHT = love.window.getDesktopDimensions(1)
 -- SCREEN_WIDTH = 1280
@@ -41,26 +47,7 @@ local background_scroll = 0
 local foreground_scroll = 0
 
 -- Background scaling factor
-local scaling_factor = VIRTUAL_HEIGHT / BACKGROUND:getHeight()
-
--- Instantiate bird object
-local bird = Bird()
-
--- Table for spawning pipes
-local pipes = {}
-
--- Timer for spawning pipes
-local spawn_timer = 0
-
--- Initial Y value
-math.randomseed(os.time())
-local last_y = math.random(
-    VIRTUAL_HEIGHT / 6 * 4,
-    VIRTUAL_HEIGHT / 6 * 2
-)
-
--- To pause the game when a collision is detected
-local paused = false
+local scale_factor = VIRTUAL_HEIGHT / BACKGROUND:getHeight()
 
 
 -- Initialize the game
@@ -71,6 +58,13 @@ function love.load()
 
     -- Set app window title
     love.window.setTitle('Flippy Bird')
+
+    -- Initialize retro text fonts
+    small_font = love.graphics.newFont('fonts/font.ttf', 8)
+    medium_font = love.graphics.newFont('fonts/flappy.ttf', 14)
+    large_font = love.graphics.newFont('fonts/flappy.ttf', 28)
+    huge_font = love.graphics.newFont('fonts/flappy.ttf', 56)
+    love.graphics.setFont(large_font)
 
     -- Initialize virtual resolution
     push:setupScreen(
@@ -84,6 +78,12 @@ function love.load()
             resizable = true
         }
     )
+
+    game_state = Machine {
+        ['title'] = function() return Title() end,
+        ['play'] = function() return Play() end,
+    }
+    game_state:change('title')
 
     -- Initialize input table
     love.keyboard.keysPressed = {}
@@ -118,51 +118,15 @@ end
 
 -- Update game state
 function love.update(dt)
-    if not paused then
-        -- Scroll background
-        background_scroll = (BACKGROUND_SCROLL_SPEED * dt + background_scroll)
-            % BACKGROUND_LOOPING_POINT
+    -- Scroll background
+    background_scroll = (BACKGROUND_SCROLL_SPEED * dt + background_scroll)
+        % BACKGROUND_LOOPING_POINT
 
-        -- Scroll foreground
-        foreground_scroll = (FOREGROUND_SCROLL_SPEED * dt + foreground_scroll)
-            % FOREGROUND_LOOPING_POINT
+    -- Scroll foreground
+    foreground_scroll = (FOREGROUND_SCROLL_SPEED * dt + foreground_scroll)
+        % FOREGROUND_LOOPING_POINT
 
-        -- Track time till next spawn
-        spawn_timer = spawn_timer + dt
-
-        -- Spawn a pipe if times is past 2 seconds
-        if spawn_timer > 2.5 then
-            table.insert(pipes, Pair(last_y))
-            print('Pipes created.')
-            last_y = math.random(
-                VIRTUAL_HEIGHT / 6 * 2,
-                VIRTUAL_HEIGHT / 6 * 4
-            )
-            spawn_timer = 0
-        end
-
-        paused = bird:update(dt)
-
-        -- Iterate over pipes
-        for _, pair in pairs(pipes) do
-            pair:update(dt)
-
-            -- Check if bird collided with pipe
-            for _, pipe in pairs(pair.pipes) do
-                if bird:collides(pipe) then
-                    -- Pause the game
-                    paused = true
-                end
-            end
-        end
-
-        for p, pair in pairs(pipes) do
-            -- Remove pipes that go off screen
-            if pair.remove then
-                table.remove(pipes, p)
-            end
-        end
-    end
+    game_state:update(dt)
 
     -- Reset input table
     love.keyboard.keysPressed = {}
@@ -172,32 +136,24 @@ end
 function love.draw()
     push:start()
 
-    -- Draw background starting at
-    -- the top left
+    -- Draw background starting at the top left
     love.graphics.draw(
         BACKGROUND,
         -background_scroll,
         0,
         0,
         1,
-        scaling_factor
+        scale_factor
     )
 
-    -- Draw all pipes
-    for _, pair in pairs(pipes) do
-        pair:render()
-    end
+    game_state:render()
 
-    -- Draw foreground towards the
-    -- bottom of the screen
+    -- Draw foreground towards bottom of the screen
     love.graphics.draw(
         FOREGROUND,
         -foreground_scroll,
         VIRTUAL_HEIGHT - 16
     )
-
-    -- Draw bird on top
-    bird:render()
 
     push:finish()
 end
