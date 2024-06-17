@@ -41,12 +41,12 @@ function Play:update(dt)
 
     -- Update position of pipes
     for _, pair in pairs(self.pipes) do
-
         -- Keep score count
         if not pair.scored then
             if pair.x + PIPE_WIDTH < self.bird.x then
                 self.score = self.score + 1
                 pair.scored = true
+                sound_effect['score']:play()
             end
         end
         pair:update(dt)
@@ -66,6 +66,8 @@ function Play:update(dt)
     for _, pair in pairs(self.pipes) do
         for _, pipe in pairs(pair.pipes) do
             if self.bird:collides(pipe) then
+                sound_effect['explosion']:play()
+                sound_effect['hurt']:play()
                 game_state:change(
                     'score',
                     {
@@ -78,6 +80,8 @@ function Play:update(dt)
 
     -- Reset if we hit screen margins
     if self.bird.y < 0 or self.bird.y > VIRTUAL_HEIGHT - self.bird.height then
+        sound_effect['explosion']:play()
+        sound_effect['hurt']:play()
         game_state:change(
             'score',
             {

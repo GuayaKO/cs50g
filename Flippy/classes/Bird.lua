@@ -38,6 +38,7 @@ function Bird:update(dt)
     -- Add lift to bird
     if love.keyboard.pressed('space') then
         self.dy = -3
+        sound_effect['jump']:play()
     end
 
     -- Apply velocity to Y position

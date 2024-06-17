@@ -67,6 +67,17 @@ function love.load()
     huge_font = love.graphics.newFont('fonts/flappy.ttf', 56)
     love.graphics.setFont(large_font)
 
+    -- Initialize sound table
+    sound_effect = {
+        ['jump'] = love.audio.newSource('audio/jump.wav', 'static'),
+        ['explosion'] = love.audio.newSource('audio/explosion.wav', 'static'),
+        ['hurt'] = love.audio.newSource('audio/hurt.wav', 'static'),
+        ['score'] = love.audio.newSource('audio/score.wav', 'static'),
+        ['music'] = love.audio.newSource('audio/marios_way.mp3', 'static')
+    }
+    sound_effect['music']:setLooping(true)
+    sound_effect['music']:play()
+
     -- Initialize virtual resolution
     push:setupScreen(
         VIRTUAL_WIDTH,

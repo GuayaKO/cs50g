@@ -8,16 +8,13 @@ function Pair:init(y)
     -- Initialize past end of screen
     self.x = VIRTUAL_WIDTH + 32
 
-    print(y)
     if y < VIRTUAL_HEIGHT / 2 then
-        print("Y < ", VIRTUAL_HEIGHT / 6 * 2)
         self.y1 = y - PIPE_HEIGHT
         self.y2 = math.random(
             y + 90,
             VIRTUAL_HEIGHT / 6 * 5
         )
     else
-        print("Y > ", VIRTUAL_HEIGHT / 6 * 4)
         self.y1 = math.random(
             VIRTUAL_HEIGHT / 6,
             y - 90
