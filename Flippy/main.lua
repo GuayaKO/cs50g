@@ -11,16 +11,17 @@ push = require 'modules.push'
 class = require 'modules.class'
 
 -- Import local classes
-require 'classes.Bird'
-require 'classes.Pipe'
-require 'classes.Pair'
+require 'classes/Bird'
+require 'classes/Pipe'
+require 'classes/Pair'
 
 -- Import state machine context
-require 'classes.Machine'
-require 'context.State'
-require 'context.Play'
-require 'context.Title'
-require 'context.Score'
+require 'classes/Machine'
+require 'context/State'
+require 'context/Play'
+require 'context/Title'
+require 'context/Score'
+require 'context/Count'
 
 -- Screen resolution
 SCREEN_WIDTH, SCREEN_HEIGHT = love.window.getDesktopDimensions(1)
@@ -83,7 +84,8 @@ function love.load()
     game_state = Machine {
         ['title'] = function() return Title() end,
         ['play'] = function() return Play() end,
-        ['score'] = function() return Score() end
+        ['score'] = function() return Score() end,
+        ['count'] = function() return Count() end
     }
     game_state:change('title')
 

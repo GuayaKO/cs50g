@@ -8,7 +8,7 @@ end
 function Score:update(dt)
     -- Go back if enter is pressed
     if love.keyboard.pressed('enter') or love.keyboard.pressed('return') then
-        game_state:change('play')
+        game_state:change('count')
     end
 end
 
